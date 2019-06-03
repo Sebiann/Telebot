@@ -9,6 +9,8 @@ const bot = new Telegraf(process.env.TOKEN);
 
 bot.use(session());
 
+console.log("Started")
+
 // On /start send msg
 bot.start((ctx) => ctx.reply('Hello'));
 // On /help send msg
@@ -16,7 +18,7 @@ bot.help((ctx) => ctx.reply('Help message'));
 
 bot.command('cal', (ctx) => {
     ctx.session.calcInputs = ''
-    return ctx.reply('Calculator: ', 
+    return ctx.reply('Calculator:\n TEST', 
         Markup.inlineKeyboard([
             [
                 Markup.callbackButton('1', '1-action'),
@@ -81,12 +83,17 @@ bot.action(/divide-action/, (ctx) => {
     ctx.session.calcInputs += ctx.match[0].replace('divide-action', ' / ');
     console.log('In: ', ctx.session.calcInputs);
 })
+bot.action(/del-action/, (ctx) => {
+    if (!ctx.session.calcInputs) {
+        ctx.session.calcInputs = ''
+    };
+})
 bot.action(/equals-action/, (ctx) => {
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = ''
     };
-    ctx.session.calcInputs += ctx.match[0].replace('equals-action', ' =');
-    ctx.session.calcInputs
+    ctx.reply(eval(ctx.session.calcInputs))
+    ctx.session.calcInputs = ''
 })
 // Bot start
 bot.launch();
