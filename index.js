@@ -3,13 +3,13 @@ require('dotenv').config();
 // Set the api
 const Telegraf = require('telegraf');
 const Markup = require('telegraf/markup');
-const session = require('telegraf/session')
+const session = require('telegraf/session');
 
 const bot = new Telegraf(process.env.TOKEN);
 
 bot.use(session());
 
-console.log("Started")
+console.log("Started");
 
 // On /start send msg
 bot.start((ctx) => ctx.reply('Hello'));
@@ -54,46 +54,46 @@ bot.action(/[0-9]-action/, (ctx) => {
     };
     ctx.session.calcInputs += ctx.match[0].replace('-action', '');
     console.log('In: ', ctx.session.calcInputs);
-})
+});
 bot.action(/plus-action/, (ctx) => {
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = ''
     };
     ctx.session.calcInputs += ctx.match[0].replace('plus-action', ' + ');
     console.log('In: ', ctx.session.calcInputs);
-})
+});
 bot.action(/minus-action/, (ctx) => {
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = ''
     };
     ctx.session.calcInputs += ctx.match[0].replace('minus-action', ' - ');
     console.log('In: ', ctx.session.calcInputs);
-})
+});
 bot.action(/times-action/, (ctx) => {
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = ''
     };
     ctx.session.calcInputs += ctx.match[0].replace('times-action', ' * ');
     console.log('In: ', ctx.session.calcInputs);
-})
+});
 bot.action(/divide-action/, (ctx) => {
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = ''
     };
     ctx.session.calcInputs += ctx.match[0].replace('divide-action', ' / ');
     console.log('In: ', ctx.session.calcInputs);
-})
+});
 bot.action(/del-action/, (ctx) => {
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = ''
     };
-})
+});
 bot.action(/equals-action/, (ctx) => {
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = ''
     };
     ctx.reply(eval(ctx.session.calcInputs))
     ctx.session.calcInputs = ''
-})
+});
 // Bot start
 bot.launch();
