@@ -16,9 +16,13 @@ bot.start((ctx) => ctx.reply('Hello'));
 // On /help send msg
 bot.help((ctx) => ctx.reply('Help message'));
 
+bot.hears(/hallo/i, (ctx) => ctx.reply("Jallo"));
+
+bot.hears(/wie g.*ht/i, (ctx) => ctx.reply("Mir gahts guet und wie gahts dir?"));
+
 bot.command('cal', (ctx) => {
     ctx.session.calcInputs = ''
-    return ctx.reply('Calculator:\n TEST', 
+    return ctx.reply(`Calculator:\n Lös: ${ctx.session.calcInputs}`,
         Markup.inlineKeyboard([
             [
                 Markup.callbackButton('1', '1-action'),
@@ -92,8 +96,15 @@ bot.action(/equals-action/, (ctx) => {
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = ''
     };
+    if (isNaN(ctx.session.calcInputs.charAt(ctx.session.calcInputs.length))) {
+        ctx.reply(`Not a calculation: ${ctx.session.calcInputs}`)
+        ctx.session.calcInputs = ''
+    };
     ctx.reply(eval(ctx.session.calcInputs))
     ctx.session.calcInputs = ''
 });
+
+bot.hears(/.*/, (ctx) => ctx.reply("HÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄH"));
+
 // Bot start
 bot.launch();
