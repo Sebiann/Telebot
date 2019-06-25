@@ -12,8 +12,8 @@ bot.use(session());
 console.log("Started");
 
 bot.catch((err) => {
-    console.log('Ooops', err)
-})
+    console.log('Ooops', err);
+});
 
 // On /start send msg
 bot.start((ctx) => ctx.reply('Hello'));
@@ -24,33 +24,57 @@ bot.hears(/hallo/i, (ctx) => ctx.reply("Jallo"));
 
 bot.hears(/wie g.*ht/i, (ctx) => ctx.reply("Mir gahts guet und wie gahts dir?"));
 
+// Debugger start
+bot.command('debug', (ctx) => {
+    ctx.session.debug_onoff = '';
+    return ctx.reply(`Debugger`, 
+        Markup.inlineKeyboard([
+            [
+                Markup.callbackButton('Debug Start', 'start-debug-action'),
+                Markup.callbackButton('Debug Stop', 'stop-debug-action')
+            ]
+        ]).extra()
+    );
+});
+bot.action(/start-debug-action/, (ctx) => {
+    ctx.answerCbQuery('Debugger On');
+    ctx.session.debug_onoff = 1;
+    console.log(ctx.session.debug_onoff);
+});
+bot.action(/stop-debug-action/, (ctx) => {
+    ctx.answerCbQuery('Debugger Off');
+    ctx.session.debug_onoff = 0;
+    console.log(ctx.session.debug_onoff);
+});
+// Debugger stop
+
 // Calculator starts here:
 let calculator_keys = Markup.inlineKeyboard([
     [
-        Markup.callbackButton('1', '1-action'),
-        Markup.callbackButton('2', '2-action'),
-        Markup.callbackButton('3', '3-action'),
-        Markup.callbackButton('+', 'plus-action')
+        Markup.callbackButton('1', '1-calc-action'),
+        Markup.callbackButton('2', '2-calc-action'),
+        Markup.callbackButton('3', '3-calc-action'),
+        Markup.callbackButton('+', 'plus-calc-action')
     ],
     [
-        Markup.callbackButton('4', '4-action'),
-        Markup.callbackButton('5', '5-action'),
-        Markup.callbackButton('6', '6-action'),
-        Markup.callbackButton('-', 'minus-action')
+        Markup.callbackButton('4', '4-calc-action'),
+        Markup.callbackButton('5', '5-calc-action'),
+        Markup.callbackButton('6', '6-calc-action'),
+        Markup.callbackButton('-', 'minus-calc-action')
     ],
     [
-        Markup.callbackButton('7', '7-action'),
-        Markup.callbackButton('8', '8-action'),
-        Markup.callbackButton('9', '9-action'),
-        Markup.callbackButton('*', 'times-action')
+        Markup.callbackButton('7', '7-calc-action'),
+        Markup.callbackButton('8', '8-calc-action'),
+        Markup.callbackButton('9', '9-calc-action'),
+        Markup.callbackButton('*', 'times-calc-action')
     ],
     [
-        Markup.callbackButton('💣', 'del-action'),
-        Markup.callbackButton('0', '0-action'),
-        Markup.callbackButton('=', 'equals-action'),
-        Markup.callbackButton('/', 'divide-action')
+        Markup.callbackButton('💣', 'del-calc-action'),
+        Markup.callbackButton('0', '0-calc-action'),
+        Markup.callbackButton('=', 'equals-calc-action'),
+        Markup.callbackButton('/', 'divide-calc-action')
     ]
-]).extra()
+]).extra();
 
 bot.command('cal', (ctx) => {
     ctx.session.calcInputs = '';
@@ -65,52 +89,52 @@ function editcalc (ctx, res) {
     };
 };
 
-bot.action(/[0-9]-action/, (ctx) => {
+bot.action(/[0-9]-calc-action/, (ctx) => {
     ctx.answerCbQuery(''); // answerCbQuery also removes that lil clock on buttons as it basically tells TG that it has recieved the action
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
     };
-    ctx.session.calcInputs += ctx.match[0].replace('-action', '');
+    ctx.session.calcInputs += ctx.match[0].replace('-calc-action', '');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
 });
-bot.action(/plus-action/, (ctx) => {
+bot.action(/plus-calc-action/, (ctx) => {
     ctx.answerCbQuery('addition');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
     };
-    ctx.session.calcInputs += ctx.match[0].replace('plus-action', '+');
+    ctx.session.calcInputs += ctx.match[0].replace('plus-calc-action', '+');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
 });
-bot.action(/minus-action/, (ctx) => {
+bot.action(/minus-calc-action/, (ctx) => {
     ctx.answerCbQuery('subtraction');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
     };
-    ctx.session.calcInputs += ctx.match[0].replace('minus-action', '-');
+    ctx.session.calcInputs += ctx.match[0].replace('minus-calc-action', '-');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
 });
-bot.action(/times-action/, (ctx) => {
+bot.action(/times-calc-action/, (ctx) => {
     ctx.answerCbQuery('multiplication');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
     };
-    ctx.session.calcInputs += ctx.match[0].replace('times-action', '*');
+    ctx.session.calcInputs += ctx.match[0].replace('times-calc-action', '*');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
 });
-bot.action(/divide-action/, (ctx) => {
+bot.action(/divide-calc-action/, (ctx) => {
     ctx.answerCbQuery('division');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
     };
-    ctx.session.calcInputs += ctx.match[0].replace('divide-action', '/');
+    ctx.session.calcInputs += ctx.match[0].replace('divide-calc-action', '/');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
 });
-bot.action(/del-action/, (ctx) => {
+bot.action(/del-calc-action/, (ctx) => {
     ctx.answerCbQuery('deleted');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
@@ -118,7 +142,7 @@ bot.action(/del-action/, (ctx) => {
     ctx.session.calcInputs = ctx.session.calcInputs.substring(0, ctx.session.calcInputs.length - 1)
     editcalc(ctx, "");
 });
-bot.action(/equals-action/, (ctx) => {
+bot.action(/equals-calc-action/, (ctx) => {
     ctx.answerCbQuery('calculating');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
@@ -127,7 +151,11 @@ bot.action(/equals-action/, (ctx) => {
     try {
         res = eval(ctx.session.calcInputs);
     } catch (error) {
-        console.error(error);
+        /* This doenst work yet 
+        if (ctx.session.debug_onoff == 1) {
+            ctx.reply(error);
+        }; */ 
+        console.error(error); 
         res = "ERROR";
     };
     editcalc(ctx, res);
@@ -136,31 +164,47 @@ bot.action(/equals-action/, (ctx) => {
 // Calculator stops here:
 
 // Reminder starts here:
+let rem_start_key = Markup.inlineKeyboard([
+    [
+        Markup.callbackButton('New Reminder', 'new-rem-action'),
+        Markup.callbackButton('List Reminders', 'list-rem-action'),
+        Markup.callbackButton('Delete Reminder', 'del-rem-action')
+    ]
+]).extra();
+let rem_new_name_key = Markup.inlineKeyboard([ // Actually dont need this, i think
+    [
+        Markup.callbackButton('Ex', 'ex')
+    ]
+]).extra();
+let rem_new_date__key = Markup.inlineKeyboard([
+    [
+        Markup.callbackButton('1', 'first'),
+        Markup.callbackButton('2', 'second'),
+        Markup.callbackButton('3', 'third'),
+        Markup.callbackButton('4', 'fourth'),
+        Markup.callbackButton('5', 'fifth')
+    ]
+]).extra();
+
 bot.command('rem', (ctx) => {
     ctx.session.reminder = []; // Its an Array
-    return ctx.reply(`Reminders: `,
-        Markup.inlineKeyboard([
-            [
-                Markup.callbackButton('New Reminder', 'new-action'),
-                Markup.callbackButton('List Reminders', 'list-action'),
-                Markup.callbackButton('Delete Reminder', 'del-action')
-            ]
-        ]).extra()
-    );
+    return ctx.reply(`Reminders: `, rem_start_key);
 });
-bot.action(/new-action/, (ctx) => {
+
+bot.action(/new-rem-action/, (ctx) => {
     ctx.answerCbQuery('New Reminder');
 });
-bot.action(/list-action/, (ctx) => {
+bot.action(/list-rem-action/, (ctx) => {
     ctx.answerCbQuery('List Reminders');
 });
-bot.action(/del-action/, (ctx) => {
+bot.action(/del-rem-action/, (ctx) => {
     ctx.answerCbQuery('Delete Reminders');
 });
 // Reminder stops here:
 
 // If any message comes that isnt defined
-bot.hears(/.*/, (ctx) => ctx.reply("HÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄH")); // make it a random chance of like 1/1000 to fire Hääää
+// Use this somehow: (Math.floor(Math.random() * 100) == 1)
+bot.hears(/.*/, (ctx) => ctx.reply("HÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄH"));
 
 // Bot start
 bot.launch();
