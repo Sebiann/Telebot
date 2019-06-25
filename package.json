@@ -1,6 +1,6 @@
 {
   "name": "telebot",
-  "version": "0.1.2",
+  "version": "0.1.1",
   "description": "A small telegram bot for a Schoolproject",
   "main": "index.js",
   "scripts": {
