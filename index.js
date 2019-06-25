@@ -202,9 +202,12 @@ bot.action(/del-rem-action/, (ctx) => {
 });
 // Reminder stops here:
 
-// If any message comes that isnt defined
-// Use this somehow: (Math.floor(Math.random() * 100) == 1)
-bot.hears(/.*/, (ctx) => ctx.reply("HÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄH"));
+// If any message comes that isnt defined, theres a chance of 1 in 9 that it will send
+bot.hears(/.*/, (ctx) => {
+    if (Math.floor(Math.random() * 9) == 1) {
+        ctx.reply("HÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄH")
+    }
+});
 
 // Bot start
 bot.launch();
