@@ -1,6 +1,8 @@
 // Load the config from the .env file in (Usage: process.env.VALUE)
 require('dotenv').config();
 // Set the api
+const util = require('util');
+const setTimeoutPromise = util.promisify(setTimeout);
 const Telegraf = require('telegraf');
 const Markup = require('telegraf/markup');
 const session = require('telegraf/session');
@@ -27,7 +29,7 @@ bot.hears(/wie g.*ht/i, (ctx) => ctx.reply("Mir gahts guet und wie gahts dir?"))
 // Debugger start
 bot.command('debug', (ctx) => {
     ctx.session.debug_onoff = '';
-    return ctx.reply(`Debugger`, 
+    return ctx.reply(`Debugger`,
         Markup.inlineKeyboard([
             [
                 Markup.callbackButton('Debug Start', 'start-debug-action'),
@@ -134,12 +136,21 @@ bot.action(/divide-calc-action/, (ctx) => {
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
 });
-bot.action(/del-calc-action/, (ctx) => {
+bot.action(/del-calc-action/, async (ctx) => { // https://javascript.info/async-await
     ctx.answerCbQuery('deleted');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
-    }; 
-    ctx.session.calcInputs = ctx.session.calcInputs.substring(0, ctx.session.calcInputs.length - 1)
+    };
+    ctx.session.calcInputs = ctx.session.calcInputs.substring(0, ctx.session.calcInputs.length - 1);
+    ctx.session.calcInputs += "💣";
+    editcalc(ctx, "");
+    await setTimeoutPromise(3000); // https://javascript.info/async-await
+    // ctx.session.calcInputs.replace("💣", "💥");
+    ctx.session.calcInputs = ctx.session.calcInputs.substring(0, ctx.session.calcInputs.length - 2);
+    ctx.session.calcInputs += "💥";
+    editcalc(ctx, "");
+    await setTimeoutPromise(3000);
+    ctx.session.calcInputs = ctx.session.calcInputs.substring(0, ctx.session.calcInputs.length - 2);
     editcalc(ctx, "");
 });
 bot.action(/equals-calc-action/, (ctx) => {
@@ -151,11 +162,11 @@ bot.action(/equals-calc-action/, (ctx) => {
     try {
         res = eval(ctx.session.calcInputs);
     } catch (error) {
-        /* This doenst work yet 
+        /* This doesnt work yet
         if (ctx.session.debug_onoff == 1) {
             ctx.reply(error);
-        }; */ 
-        console.error(error); 
+        }; */
+        console.error(error);
         res = "ERROR";
     };
     editcalc(ctx, res);
