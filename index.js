@@ -27,7 +27,7 @@ bot.hears(/wie g.*ht/i, (ctx) => ctx.reply("Mir gahts guet und wie gahts dir?"))
 // Debugger start
 bot.command('debug', (ctx) => {
     ctx.session.debug_onoff = '';
-    return ctx.reply(`Debugger`, 
+    return ctx.reply(`Debugger`,
         Markup.inlineKeyboard([
             [
                 Markup.callbackButton('Debug Start', 'start-debug-action'),
@@ -86,14 +86,14 @@ function editcalc (ctx, res) {
         ctx.editMessageText(`Calculator:\nCalc: ${ctx.session.calcInputs}=${res}`, calculator_keys);
     } else {
         ctx.editMessageText(`Calculator:\nCalc: ${ctx.session.calcInputs}`, calculator_keys);
-    };
-};
+    }
+}
 
 bot.action(/[0-9]-calc-action/, (ctx) => {
     ctx.answerCbQuery(''); // answerCbQuery also removes that lil clock on buttons as it basically tells TG that it has recieved the action
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
-    };
+    }
     ctx.session.calcInputs += ctx.match[0].replace('-calc-action', '');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
@@ -102,7 +102,7 @@ bot.action(/plus-calc-action/, (ctx) => {
     ctx.answerCbQuery('addition');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
-    };
+    }
     ctx.session.calcInputs += ctx.match[0].replace('plus-calc-action', '+');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
@@ -111,7 +111,7 @@ bot.action(/minus-calc-action/, (ctx) => {
     ctx.answerCbQuery('subtraction');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
-    };
+    }
     ctx.session.calcInputs += ctx.match[0].replace('minus-calc-action', '-');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
@@ -120,7 +120,7 @@ bot.action(/times-calc-action/, (ctx) => {
     ctx.answerCbQuery('multiplication');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
-    };
+    }
     ctx.session.calcInputs += ctx.match[0].replace('times-calc-action', '*');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
@@ -129,7 +129,7 @@ bot.action(/divide-calc-action/, (ctx) => {
     ctx.answerCbQuery('division');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
-    };
+    }
     ctx.session.calcInputs += ctx.match[0].replace('divide-calc-action', '/');
     console.log('In: ', ctx.session.calcInputs);
     editcalc(ctx, "");
@@ -138,7 +138,7 @@ bot.action(/del-calc-action/, (ctx) => {
     ctx.answerCbQuery('deleted');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
-    }; 
+    }
     ctx.session.calcInputs = ctx.session.calcInputs.substring(0, ctx.session.calcInputs.length - 1)
     editcalc(ctx, "");
 });
@@ -146,24 +146,25 @@ bot.action(/equals-calc-action/, (ctx) => {
     ctx.answerCbQuery('calculating');
     if (!ctx.session.calcInputs) {
         ctx.session.calcInputs = '';
-    };
+    }
     let res = "";
     try {
         res = eval(ctx.session.calcInputs);
     } catch (error) {
-        /* This doenst work yet 
+        /* This doenst work yet
         if (ctx.session.debug_onoff == 1) {
             ctx.reply(error);
-        }; */ 
-        console.error(error); 
+        }; */
+        console.error(error);
         res = "ERROR";
-    };
+    }
     editcalc(ctx, res);
     ctx.session.calcInputs = '';
 });
 // Calculator stops here:
 
 // Reminder starts here:
+/*
 let rem_start_key = Markup.inlineKeyboard([
     [
         Markup.callbackButton('New Reminder', 'new-rem-action'),
@@ -200,7 +201,8 @@ bot.action(/list-rem-action/, (ctx) => {
 bot.action(/del-rem-action/, (ctx) => {
     ctx.answerCbQuery('Delete Reminders');
 });
-// Reminder stops here:
+*/
+// Reminder stops here
 
 // If any message comes that isnt defined, theres a chance of 1 in 9 that it will send
 bot.hears(/.*/, (ctx) => {

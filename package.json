@@ -4,7 +4,8 @@
   "description": "A small telegram bot for a Schoolproject",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "npx eslint ."
   },
   "repository": {
     "type": "git",
@@ -16,9 +17,11 @@
   },
   "homepage": "https://github.com/Sebiann/Telebot#readme",
   "dependencies": {
-    "dotenv": "^8.0.0",
-    "telegraf": "^3.29.0"
+    "dotenv": "^8.1.0",
+    "telegraf": "^3.32.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.4.0"
+  },
   "license": "ISC"
 }
