@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-const storage = require('../lib/storage.js')
+// const storage = require('../lib/storage.js')
 // const star = require('../lib/star.js')
 
 const Markup = require('telegraf/markup')
